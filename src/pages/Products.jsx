@@ -90,6 +90,7 @@ const Products = () => {
           <option value="price-high">Price: High to Low</option>
           <option value="rating">Rating: High to Low</option>
           <option value="newest">Newest</option>
+          <option value="discount">Biggest Discount</option>
         </select>
       </div>
 

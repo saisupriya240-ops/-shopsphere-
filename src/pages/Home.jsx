@@ -7,8 +7,26 @@ const QuickViewModal = lazy(() => import('../components/QuickViewModal'));
 import { CATEGORY_FILTERS } from '../utils/productHelpers';
 
 const Home = () => {
-  const featuredProducts = useMemo(() => products.filter((p) => p.featured), []);
-  const newest = useMemo(() => [...products].sort((a, b) => b.createdAt - a.createdAt).slice(0, 4), []);
+  const featuredProducts = useMemo(() => {
+    return [...products].sort((a, b) => b.rating - a.rating).slice(0, 4);
+  }, []);
+
+  const newArrivals = useMemo(() => {
+    const featuredIds = new Set(featuredProducts.map(p => p.id));
+    return [...products]
+      .filter(p => !featuredIds.has(p.id))
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 4);
+  }, [featuredProducts]);
+
+  const budgetPicks = useMemo(() => {
+    const usedIds = new Set([...featuredProducts.map(p => p.id), ...newArrivals.map(p => p.id)]);
+    return [...products]
+      .filter(p => !usedIds.has(p.id))
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 4);
+  }, [featuredProducts, newArrivals]);
+
   const [quick, setQuick] = useState(null);
   const navigate = useNavigate();
 
@@ -20,7 +38,7 @@ const Home = () => {
           Experience next-gen shopping with <span className="hero-highlight">ShopSphere</span>
         </h1>
         <p className="hero-subtitle">
-          Artisan pottery, Chanderi silk, Malabar spice, and spatial audio — curated under one electric-violet roof.
+          Premium fashion, everyday essentials, and statement accessories — without the premium price tag.
         </p>
         <div className="hero-actions">
           <Link to="/products" className="btn-primary">
@@ -69,10 +87,10 @@ const Home = () => {
             <h2 className="section-title">
               Featured <span>highlights</span>
             </h2>
-            <p className="section-subtitle">Top-rated pieces handpicked for the sphere</p>
+            <p className="section-subtitle">Top-rated pieces handpicked for you</p>
           </div>
-          <Link to="/products" className="section-link">
-            View all ({products.length}) →
+          <Link to="/products?sort=rating" className="section-link">
+            View all →
           </Link>
         </div>
         <div className="product-grid">
@@ -86,16 +104,35 @@ const Home = () => {
         <div className="section-header">
           <div>
             <h2 className="section-title">
-              New <span>drops</span>
+              New <span>arrivals</span>
             </h2>
-            <p className="section-subtitle">Latest catalog arrivals</p>
+            <p className="section-subtitle">Latest catalog additions</p>
           </div>
           <Link to="/products?sort=newest" className="section-link">
             Sort by newest →
           </Link>
         </div>
         <div className="product-grid">
-          {newest.map((product) => (
+          {newArrivals.map((product) => (
+            <ProductCard key={product.id} product={product} onQuickView={setQuick} />
+          ))}
+        </div>
+      </section>
+
+      <section style={{ marginBottom: '3rem' }}>
+        <div className="section-header">
+          <div>
+            <h2 className="section-title">
+              Budget <span>picks</span>
+            </h2>
+            <p className="section-subtitle">Affordable fashion essentials</p>
+          </div>
+          <Link to="/products?sort=price-low" className="section-link">
+            Sort by price →
+          </Link>
+        </div>
+        <div className="product-grid">
+          {budgetPicks.map((product) => (
             <ProductCard key={product.id} product={product} onQuickView={setQuick} />
           ))}
         </div>

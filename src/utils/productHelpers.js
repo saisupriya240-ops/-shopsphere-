@@ -1,3 +1,4 @@
+// Category filter list shown in UI
 export const CATEGORY_FILTERS = [
   'All',
   'Indian Products',
@@ -6,15 +7,36 @@ export const CATEGORY_FILTERS = [
   'Tech/Electronics',
   'Audio',
   'Lifestyle',
+  "Women's Accessories",
+  "Men's Hoodies",
+  'Jeans',
+  'Crop Tops',
+  'Footwear',
+  'Bags',
+  'Watches',
+  'Jewellery',
+  "Men's Casual Wear",
+  "Women's Casual Wear",
 ];
 
+// Maps UI filter labels → one or more product.category values
 const CATEGORY_GROUPS = {
   'Indian Products': ['Indian Products', 'Handicrafts', 'Home & Kitchen'],
-  Fashion: ['Fashion'],
-  'Grocery/Food': ['Grocery/Food'],
-  'Tech/Electronics': ['Electronics', 'Tech/Electronics'],
-  Audio: ['Audio'],
-  Lifestyle: ['Lifestyle', 'Accessories', 'Beauty'],
+  'Fashion':         ['Fashion'],
+  'Grocery/Food':    ['Grocery/Food'],
+  'Tech/Electronics':['Tech/Electronics', 'Electronics'],
+  'Audio':           ['Audio'],
+  'Lifestyle':       ['Lifestyle', 'Accessories', 'Beauty'],
+  "Women's Accessories": ["Women's Accessories"],
+  "Men's Hoodies":       ["Men's Hoodies"],
+  'Jeans':               ['Jeans'],
+  'Crop Tops':           ['Crop Tops'],
+  'Footwear':            ['Footwear'],
+  'Bags':                ['Bags'],
+  'Watches':             ['Watches'],
+  'Jewellery':           ['Jewellery'],
+  "Men's Casual Wear":   ["Men's Casual Wear"],
+  "Women's Casual Wear": ["Women's Casual Wear"],
 };
 
 export const matchesCategory = (product, selected) => {
@@ -56,10 +78,15 @@ export const sortProducts = (list, sortBy) => {
     case 'price-high':
       return items.sort((a, b) => b.price - a.price);
     case 'rating':
-      return items.sort((a, b) => b.rating - a.rating);
+      return items.sort((a, b) => (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0));
     case 'newest':
-      return items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0) || b.id - a.id);
+      return items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    case 'discount':
+      return items.sort((a, b) => (b.discount || 0) - (a.discount || 0));
     default:
-      return items.sort((a, b) => Number(b.featured) - Number(a.featured) || b.rating - a.rating);
+      return items.sort((a, b) =>
+        Number(b.featured) - Number(a.featured) ||
+        (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0)
+      );
   }
 };

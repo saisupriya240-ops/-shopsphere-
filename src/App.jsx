@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useCallback, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Loader from './components/Loader';
@@ -19,6 +19,8 @@ function App() {
   const { toastMessage } = useToast();
   const [cartOpen, setCartOpen] = useState(false);
   const [wishOpen, setWishOpen] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   const openCart = useCallback(() => setCartOpen(true), []);
   const closeCart = useCallback(() => setCartOpen(false), []);
@@ -26,7 +28,7 @@ function App() {
   const closeWish = useCallback(() => setWishOpen(false), []);
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${isHome ? 'theme-dark' : 'theme-light'}`}>
       <Navbar onOpenCart={openCart} onOpenWishlist={openWish} />
       <main className="main-content">
         <Suspense fallback={<Loader />}>

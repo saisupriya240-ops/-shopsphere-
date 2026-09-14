@@ -47,7 +47,6 @@ const Navbar = ({ onOpenCart, onOpenWishlist }) => {
     <header className="navbar">
       <div className="navbar-container">
         <Link to="/" className="brand-logo" aria-label="ShopSphere home">
-          <span>⚡</span>
           <span>ShopSphere</span>
         </Link>
 
